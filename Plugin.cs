@@ -94,7 +94,7 @@ public class SpeedometerMod : BaseUnityPlugin
         textRect.offsetMax = new Vector2(-10f, -5f);
 
         DontDestroyOnLoad(canvasGO);
-        Logger.LogInfo("UI components added - check for larger black box top-center.");
+        //Logger.LogInfo("UI components added - check for larger black box top-center.");
     }
 
     private void Update()
@@ -118,7 +118,7 @@ public class SpeedometerMod : BaseUnityPlugin
         string sceneName = SceneManager.GetActiveScene().name;
         if (!hasLoggedScene)
         {
-            Logger.LogInfo($"Current Scene Name (for filter tuning): {sceneName}");
+            //Logger.LogInfo($"Current Scene Name (for filter tuning): {sceneName}");
             hasLoggedScene = true;
         }
 
@@ -150,7 +150,7 @@ public class SpeedometerMod : BaseUnityPlugin
         // One-time log for first valid update
         if (!hasLoggedUpdateOnce && speed > 0f)
         {
-            Logger.LogInfo($"First speed update - Value: {speed} (Scene: {sceneName})");
+            //Logger.LogInfo($"First speed update - Value: {speed} (Scene: {sceneName})");
             hasLoggedUpdateOnce = true;
         }
     }
@@ -178,7 +178,7 @@ public class SpeedometerMod : BaseUnityPlugin
         }
 
         bool isNowLocked = (Cursor.lockState == CursorLockMode.Locked);
-        Logger.LogInfo($"App Focus: {hasFocus} - Cursor {(isNowLocked ? "relocked" : "unlocked/visible")}. WasLocked: {wasLocked}, TabPressed: {Keyboard.current.tabKey.isPressed}");
+        //Logger.LogInfo($"App Focus: {hasFocus} - Cursor {(isNowLocked ? "relocked" : "unlocked/visible")}. WasLocked: {wasLocked}, TabPressed: {Keyboard.current.tabKey.isPressed}");
     }
 
     private void OnDestroy()
