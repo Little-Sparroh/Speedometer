@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem; // For new Input System
 using Pigeon.Movement; // From Player.cs
 
-[BepInPlugin("com.yourname.speedometer", "Speedometer Mod", "1.0.0")]
+[BepInPlugin("com.yourname.speedometer", "Speedometer Mod", "1.0.3")]
 [MycoMod(null, ModFlags.IsClientSide)]
 public class SpeedometerMod : BaseUnityPlugin
 {
@@ -22,6 +22,8 @@ public class SpeedometerMod : BaseUnityPlugin
     private bool uiVisible = true; // For F9 toggle
 
     private bool wasLocked = false; // For cursor lock tracking
+
+    private static readonly Color sky = new Color(0.529f, 0.808f, 0.922f); // #87CEEB
 
     private void Awake()
     {
@@ -68,13 +70,13 @@ public class SpeedometerMod : BaseUnityPlugin
         GameObject bgGO = new GameObject("SpeedBg");
         bgGO.transform.SetParent(canvasGO.transform, false);
         backgroundImage = bgGO.AddComponent<Image>();
-        backgroundImage.color = new Color(0f, 0f, 0f, 0f); // 50% opaque black
+        backgroundImage.color = new Color(0f, 0f, 0f, 0.6f); // 50% opaque black
         backgroundImage.raycastTarget = false;
         var bgRect = bgGO.GetComponent<RectTransform>();
-        bgRect.anchorMin = new Vector2(0.05f, 0.5f); // Top-center anchor
-        bgRect.anchorMax = new Vector2(0.05f, 0.5f);
-        bgRect.anchoredPosition = new Vector2(0f, -30f); // Slight downward offset from top-center; tweak if needed
-        bgRect.sizeDelta = new Vector2(250f, 40f); // Bigger for full text
+        bgRect.anchorMin = new Vector2(0.11f, 1f); // Top-center anchor
+        bgRect.anchorMax = new Vector2(0.11f, 1f);
+        bgRect.anchoredPosition = new Vector2(0f, -15f); // Slight downward offset from top-center; tweak if needed
+        bgRect.sizeDelta = new Vector2(150f, 25f); // Bigger for full text
 
         // Text
         GameObject textGO = new GameObject("SpeedText");
@@ -82,7 +84,7 @@ public class SpeedometerMod : BaseUnityPlugin
         speedText = textGO.AddComponent<Text>();
         speedText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         speedText.text = "Speed: Loading...";
-        speedText.fontSize = 20; // Slightly larger
+        speedText.fontSize = 15; // Slightly larger
         speedText.color = Color.white;
         speedText.alignment = TextAnchor.MiddleCenter; // Center for top-center pos
         speedText.raycastTarget = false; // No input blocking
@@ -90,8 +92,8 @@ public class SpeedometerMod : BaseUnityPlugin
         var textRect = textGO.GetComponent<RectTransform>();
         textRect.anchorMin = Vector2.zero;
         textRect.anchorMax = Vector2.one;
-        textRect.offsetMin = new Vector2(10f, 5f); // Padding
-        textRect.offsetMax = new Vector2(-10f, -5f);
+        textRect.offsetMin = new Vector2(1f, 1f); // Padding
+        textRect.offsetMax = new Vector2(-1f, -1f);
 
         DontDestroyOnLoad(canvasGO);
         //Logger.LogInfo("UI components added - check for larger black box top-center.");
@@ -140,7 +142,7 @@ public class SpeedometerMod : BaseUnityPlugin
 
         if (speed > 0f)
         {
-            speedText.text = $"Speed: {speed:F1} m/s";
+            speedText.text = $"Speed: <color=#{ColorUtility.ToHtmlStringRGB(sky)}>{speed:F1}</color> m/s";
         }
         else
         {
@@ -148,6 +150,7 @@ public class SpeedometerMod : BaseUnityPlugin
         }
 
         // One-time log for first valid update
+
         if (!hasLoggedUpdateOnce && speed > 0f)
         {
             //Logger.LogInfo($"First speed update - Value: {speed} (Scene: {sceneName})");
