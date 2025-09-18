@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem; // For new Input System
 using Pigeon.Movement; // From Player.cs
 
-[BepInPlugin("com.yourname.speedometer", "Speedometer Mod", "1.0.3")]
+[BepInPlugin("com.yourname.speedometer", "Speedometer Mod", "1.0.1")]
 [MycoMod(null, ModFlags.IsClientSide)]
 public class SpeedometerMod : BaseUnityPlugin
 {
@@ -29,24 +29,25 @@ public class SpeedometerMod : BaseUnityPlugin
     {
         var harmony = new Harmony("com.yourname.speedometer");
         harmony.PatchAll();
+        Logger.LogInfo($"{harmony.Id} loaded!");
 
         currentMoveSpeedField = typeof(Player).GetField("currentMoveSpeed", BindingFlags.NonPublic | BindingFlags.Instance);
         moveVelocityField = typeof(Player).GetField("moveVelocity", BindingFlags.NonPublic | BindingFlags.Instance);
 
         if (currentMoveSpeedField == null || moveVelocityField == null)
         {
-            Logger.LogError("Failed to reflect Player fields! Mod disabled.");
+            //Logger.LogError("Failed to reflect Player fields! Mod disabled.");
             enabled = false;
             return;
         }
 
-        Logger.LogInfo("Speedometer Mod Awake() - UI creation queued.");
+        //Logger.LogInfo("Speedometer Mod Awake() - UI creation queued.");
     }
 
     private void Start()
     {
         CreateUI();
-        Logger.LogInfo("Speedometer Mod Start() - UI created.");
+        //Logger.LogInfo("Speedometer Mod Start() - UI created.");
     }
 
     private void CreateUI()
@@ -107,7 +108,7 @@ public class SpeedometerMod : BaseUnityPlugin
             uiVisible = !uiVisible;
             if (backgroundImage != null) backgroundImage.enabled = uiVisible;
             if (speedText != null) speedText.enabled = uiVisible;
-            Logger.LogInfo($"Speedometer UI {(uiVisible ? "shown" : "hidden")}.");
+            //Logger.LogInfo($"Speedometer UI {(uiVisible ? "shown" : "hidden")}.");
         }
 
         if (!uiVisible || speedText == null || Player.LocalPlayer == null)
