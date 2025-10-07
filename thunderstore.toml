@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 namespace = "Sparroh"
 name = "Speedometer"
 description = "Toggle to enable a speedometer with F6."
-websiteUrl = "https://github.com/funlennysub/MycopunkModTemplate"
+websiteUrl = "https://github.com/Little-Sparroh/Speedometer"
 containsNsfwContent = false
 
 [package.dependencies]
