@@ -36,8 +36,8 @@ public class SpeedometerMod
             enableSpeedometerHUD = configFile.Bind("General", "EnableSpeedometerHUD", true, "Enables the speedometer HUD display.");
             enableSpeedometerHUD.SettingChanged += OnEnableSpeedometerHUDChanged;
 
-            speedometerAnchorX = configFile.Bind("HUD Positioning", "SpeedometerAnchorX", 0.15f, "X anchor position for Speedometer (0-1).");
-            speedometerAnchorY = configFile.Bind("HUD Positioning", "SpeedometerAnchorY", 0.86f, "Y anchor position for Speedometer (0-1).");
+            speedometerAnchorX = configFile.Bind("HUD Positioning", "SpeedometerAnchorX", 0.06418981f, "X anchor position for Speedometer (0-1).");
+            speedometerAnchorY = configFile.Bind("HUD Positioning", "SpeedometerAnchorY", 0.2298982f, "Y anchor position for Speedometer (0-1).");
             speedometerAnchorX.SettingChanged += OnAnchorChanged;
             speedometerAnchorY.SettingChanged += OnAnchorChanged;
 
