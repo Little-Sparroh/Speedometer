@@ -11,7 +11,9 @@ public class SpeedometerMod
     private ConfigEntry<bool> enableSpeedometerHUD;
     private ConfigEntry<float> speedometerAnchorX;
     private ConfigEntry<float> speedometerAnchorY;
+    private ConfigColor valueColor;
     private HudHandle hud;
+
     private FieldInfo currentMoveSpeedField;
     private FieldInfo vkField;
     private FieldInfo rbField;
@@ -40,6 +42,10 @@ public class SpeedometerMod
             speedometerAnchorY = configFile.Bind("HUD Positioning", "SpeedometerAnchorY", 0.2298982f, "Y anchor position for Speedometer (0-1).");
             speedometerAnchorX.SettingChanged += OnAnchorChanged;
             speedometerAnchorY.SettingChanged += OnAnchorChanged;
+
+            valueColor = ConfigColor.Bind(configFile, "Colors", "ValueColor", UIColors.Sky,
+                "Rich-text value color for speed (hex RRGGBB or #RRGGBB).");
+
 
             currentMoveSpeedField = typeof(Player).GetField("currentMoveSpeed", BindingFlags.NonPublic | BindingFlags.Instance);
             vkField = typeof(Player).GetField("velocity", BindingFlags.NonPublic | BindingFlags.Instance) ??
@@ -155,9 +161,10 @@ public class SpeedometerMod
             float speed = ReadSpeed();
 
             if (speed > 0f)
-                hud.Primary.SetRich("Speed", speed, UIColors.Sky, "m/s");
+                hud.Primary.SetRich("Speed", speed, valueColor.Value, "m/s");
             else
                 hud.Primary.Text = "No Speed Detected";
+
         }
         catch (Exception ex)
         {
