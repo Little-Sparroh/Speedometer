@@ -12,7 +12,7 @@ public class SparrohPlugin : BaseUnityPlugin
 
     public const string PluginGUID = "sparroh.speedometer";
     public const string PluginName = "Speedometer";
-    public const string PluginVersion = "1.2.0";
+    public const string PluginVersion = "1.2.1";
 
     internal static new ManualLogSource Logger;
 

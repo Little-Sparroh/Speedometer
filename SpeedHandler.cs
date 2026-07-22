@@ -75,18 +75,18 @@ public class SpeedometerMod
         }
     }
 
-    public bool IsActive => hud != null && hud.IsActive;
-    public Vector2 GetSize => hud?.Size ?? Vector2.zero;
+    public bool IsActive => HudHandle.IsValid(hud) && hud.IsActive;
+    public Vector2 GetSize => HudHandle.IsValid(hud) ? hud.Size : Vector2.zero;
 
     public void UpdateHudVisibility()
     {
-        if (hud != null)
+        if (HudHandle.IsValid(hud))
             hud.SetActive(enableSpeedometerHUD.Value);
     }
 
     private void OnEnableSpeedometerHUDChanged(object sender, EventArgs e)
     {
-        if (enableSpeedometerHUD.Value == false && hud != null)
+        if (enableSpeedometerHUD.Value == false && HudHandle.IsValid(hud))
         {
             DestroyHud();
         }
@@ -100,13 +100,20 @@ public class SpeedometerMod
 
     private void UpdateAnchors()
     {
-        if (hud != null)
+        if (HudHandle.IsValid(hud))
             hud.SetAnchor(speedometerAnchorX.Value, speedometerAnchorY.Value);
     }
 
     private void CreateSpeedometerHUD()
     {
-        if (hud != null) return;
+        // Stale handle after quit-to-menu: C# wrapper survives, GameObject does not.
+        if (hud != null && !hud.IsAlive)
+        {
+            HudRepositionClient.Unregister(SparrohPlugin.PluginGUID);
+            hud = null;
+        }
+
+        if (HudHandle.IsValid(hud)) return;
 
         hud = HudBuilder.Create("SpeedometerHUD")
             .ParentToReticle()
@@ -116,7 +123,7 @@ public class SpeedometerMod
             .AddText("SpeedText")
             .Build();
 
-        if (hud == null)
+        if (!HudHandle.IsValid(hud))
             return;
 
         HudRepositionClient.Register(
@@ -134,7 +141,8 @@ public class SpeedometerMod
         HudRepositionClient.Unregister(SparrohPlugin.PluginGUID);
         if (hud != null)
         {
-            hud.Destroy();
+            if (hud.IsAlive)
+                hud.Destroy();
             hud = null;
         }
     }
@@ -145,7 +153,7 @@ public class SpeedometerMod
         {
             if (!enableSpeedometerHUD.Value) return;
 
-            if (hud == null)
+            if (!HudHandle.IsValid(hud))
             {
                 CreateSpeedometerHUD();
                 return;
@@ -157,6 +165,7 @@ public class SpeedometerMod
                     hud.Primary.Text = "No Player";
                 return;
             }
+
 
             float speed = ReadSpeed();
 

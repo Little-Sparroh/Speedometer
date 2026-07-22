@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- added ui reload after exiting to menu
+
 ## [1.2.0] - 2026-07-10
 ### Added
 - Initial standalone release of Speedometer (split from ExpandedHUD)
