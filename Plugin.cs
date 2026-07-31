@@ -2,19 +2,17 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
-using System.IO;
 
 [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 [BepInDependency("sparroh.uilibrary")]
 [MycoMod(null, ModFlags.IsClientSide)]
-public class SparrohPlugin : BaseUnityPlugin
+public class SpeedometerPlugin : BaseUnityPlugin
 {
-
     public const string PluginGUID = "sparroh.speedometer";
     public const string PluginName = "Speedometer";
-    public const string PluginVersion = "1.2.1";
+    public const string PluginVersion = "1.2.2";
 
-    internal static new ManualLogSource Logger;
+    internal new static ManualLogSource Logger;
 
     private Harmony harmony;
     private SpeedometerMod speedometer;
@@ -22,6 +20,16 @@ public class SparrohPlugin : BaseUnityPlugin
     private void Awake()
     {
         Logger = base.Logger;
+
+        try
+        {
+            ConfigManager.Initialize(Config, Logger);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Failed to initialize config: {ex.Message}");
+            return;
+        }
 
         try
         {
@@ -33,24 +41,9 @@ public class SparrohPlugin : BaseUnityPlugin
             return;
         }
 
-        var configFile = Config;
         try
         {
-            var watcher = new FileSystemWatcher(Paths.ConfigPath, "sparroh.speedometer.cfg");
-            watcher.Changed += (s, e) =>
-            {
-                configFile.Reload();
-            };
-            watcher.EnableRaisingEvents = true;
-        }
-        catch (Exception ex)
-        {
-            Logger.LogWarning($"Failed to set up config watcher: {ex.Message}");
-        }
-
-        try
-        {
-            speedometer = new SpeedometerMod(configFile, harmony);
+            speedometer = new SpeedometerMod();
         }
         catch (Exception ex)
         {
@@ -73,15 +66,11 @@ public class SparrohPlugin : BaseUnityPlugin
     {
         try
         {
-            if (speedometer != null) speedometer.UpdateHudVisibility();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError($"Error in Speedometer.UpdateHudVisibility(): {ex.Message}");
-        }
+            ConfigManager.Tick();
 
-        try
-        {
+            if (ConfigManager.ConsumePendingRefresh() && speedometer != null)
+                speedometer.OnConfigChanged();
+
             if (speedometer != null) speedometer.Update();
         }
         catch (Exception ex)
@@ -99,6 +88,15 @@ public class SparrohPlugin : BaseUnityPlugin
         catch (Exception ex)
         {
             Logger.LogError($"Error in Speedometer.OnDestroy(): {ex.Message}");
+        }
+
+        try
+        {
+            ConfigManager.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Error disposing config: {ex.Message}");
         }
 
         try

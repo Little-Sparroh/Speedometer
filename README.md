@@ -1,60 +1,69 @@
 # Speedometer
 
-A BepInEx mod for MycoPunk that displays your current movement speed on the HUD.
+A BepInEx client mod for Mycopunk that displays your current movement speed on the HUD.
 
 ## Features
 
-- **Live Speed Display**: Shows your current movement speed in m/s on a configurable HUD element
-- **Toggleable HUD**: Enable or disable the speedometer from the config file
-- **Configurable Position**: Adjust X/Y anchor position to place the HUD wherever you like
-- **Hot Reload**: Config changes are picked up automatically while the game is running
+- **Live speed display** — Shows your current movement speed in m/s
+- **Toggleable HUD** — Enable or disable the speedometer from the config file
+- **Configurable position** — Adjust X/Y anchor position to place the HUD wherever you like
+- **Configurable color** — Customize the speed value color (default: sky blue)
+- **Hot reload** — Config changes are picked up automatically while the game is running
+- **Optional HUD repositioning** — Registers with HudRepositionAPI when available for in-game dragging
 
-## Getting Started
+## Dependencies
 
-### Dependencies
+- Mycopunk
+- [BepInEx](https://github.com/BepInEx/BepInEx) 5.4.2403 or compatible (BepInExPack_Mycopunk)
+- [SparrohUILib](https://thunderstore.io/c/mycopunk/p/Sparroh/SparrohUILib/) 1.2.0 or compatible
 
-* MycoPunk (base game)
-* [BepInEx](https://github.com/BepInEx/BepInEx) - Version 5.4.2403 or compatible
-* .NET Framework 4.8
-* [HarmonyLib](https://github.com/pardeike/Harmony) (included via NuGet)
+## Installation
 
-### Building/Compiling
+**Via Thunderstore (recommended)**
 
-1. Clone this repository
-2. Open the solution file in Visual Studio, Rider, or your preferred C# IDE
-3. Build the project in Release mode to generate the .dll file
+1. Install with a Thunderstore-compatible mod manager (e.g. r2modman or Thunderstore Mod Manager).
+2. Required dependencies are installed automatically.
 
-Alternatively, use dotnet CLI:
+**Manual installation**
+
+1. Install BepInEx and SparrohUILib for Mycopunk.
+2. Place `Speedometer.dll` in `<Mycopunk Directory>/BepInEx/plugins/`.
+
+The mod loads automatically through BepInEx when the game starts. Check the BepInEx log for a successful load message.
+
+## Building
+
+1. Clone this repository.
+2. Open the solution in Visual Studio, Rider, or another C# IDE.
+3. Ensure game and dependency assembly paths in the project file match your install.
+4. Build in Release mode:
+
 ```bash
 dotnet build --configuration Release
 ```
 
-### Installing
-
-**Via Thunderstore (Recommended)**:
-1. Download and install via Thunderstore Mod Manager
-2. The mod will be automatically installed to the correct directory
-
-**Manual Installation**:
-1. Place the built `Speedometer.dll` in your `<MycoPunk Directory>/BepInEx/plugins/` folder
-
-### Executing program
-
-The mod loads automatically through BepInEx when the game starts. Check the BepInEx console for loading confirmation messages.
+The output DLL is written to `bin/Release/netstandard2.1/Speedometer.dll`.
 
 ## Configuration
 
-Access mod settings through the BepInEx configuration file at `<MycoPunk Directory>/BepInEx/config/sparroh.speedometer.cfg`. Key options include:
+Settings are stored at:
 
-- **EnableSpeedometerHUD**: Toggle the speedometer display on/off (default: true)
-- **SpeedometerAnchorX**: Horizontal anchor position (0–1, default: 0.15)
-- **SpeedometerAnchorY**: Vertical anchor position (0–1, default: 0.86)
+`<Mycopunk Directory>/BepInEx/config/sparroh.speedometer.cfg`
 
-## Help
+| Section         | Key                | Default  | Description                                   |
+|-----------------|--------------------|----------|-----------------------------------------------|
+| General         | Enable Speedometer | `true`   | Toggles the speedometer HUD on or off         |
+| HUD Positioning | Speedometer X      | `~0.064` | Horizontal anchor (0–1)                       |
+| HUD Positioning | Speedometer Y      | `~0.230` | Vertical anchor (0–1)                         |
+| Colors          | Speed Color        | sky blue | Rich-text value color (`RRGGBB` or `#RRGGBB`) |
 
-* **Mod not loading?** Verify BepInEx is installed correctly and check console logs for errors
-* **Speed not updating?** Ensure you are in-game with a local player loaded
-* **HUD position wrong?** Adjust `SpeedometerAnchorX` / `SpeedometerAnchorY` in the config file
+## Troubleshooting
+
+- **Mod not loading?** Confirm BepInEx and SparrohUILib are installed, then check the BepInEx log for errors.
+- **Speed not updating?** Make sure you are in-game with a local player loaded.
+- **HUD position wrong?** Adjust Speedometer X / Speedometer Y in the config, or use a HUD reposition mod if available.
+- **No speed detected?** The mod tries several player velocity sources; if none report motion you will see "No Speed
+  Detected".
 
 ## Authors
 
@@ -62,4 +71,4 @@ Access mod settings through the BepInEx configuration file at `<MycoPunk Directo
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
